@@ -11,4 +11,6 @@ struct hvl_config_t* hvl_create_config()
     // Fill out default exit handlers, giving unsupported ones
     // a null handler which will panic
     config->exit_handlers[VMX_EXIT_REASON_CPUID] = cpuid_handler;
+    
+    some other shit
 }
