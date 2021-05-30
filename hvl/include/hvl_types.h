@@ -17,6 +17,8 @@ typedef uint32_t hvl_status_t;
 // Strongly typed handle alias for VMs
 typedef uint32_t hvl_handle_t;
 
+#define NULL (void*)0
+
 #define HVL_STATUS_OK 0x00000001
 
 #define HVL_OK(status) \
