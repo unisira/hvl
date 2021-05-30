@@ -3,9 +3,9 @@
 
 #include "vcpu.h"
 
-struct vm_t
+typedef struct 
 {
-    struct vcpu_t* vcpus; 
-};
+    vcpu_t* vcpus; 
+} vm_t;
 
 #endif

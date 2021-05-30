@@ -4,10 +4,9 @@
 #include "hvl_types.h"
 #include "config.h"
 
-struct vcpu_t
+typedef struct
 {
     uint8_t id;
-    hvl_config_t* config;
-};
+} vcpu_t;
 
 #endif

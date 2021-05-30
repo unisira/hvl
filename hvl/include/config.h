@@ -4,7 +4,7 @@
 #include "hvl_types.h" 
 #include "vmx.h"
 
-enum target_processors_t
+typedef enum 
 {
     // Virtualise all present processors, useful for virtualising a whole system
     HVL_TARGET_ALL_PROCESSORS,
@@ -15,10 +15,10 @@ enum target_processors_t
 
     // UNIMPLEMENTED: Use the positional targeting fields in the configuation
     HVL_USE_POSITIONAL_TARGETING
-};
+} target_processors_t;
 
 // The structure describing the features and architecture of a VM (and subsequent VCPU's)
-struct hvl_config_t
+typedef struct 
 {
     // Controls the processors that will be targeted (see enum target_processors_t)
     uint32_t target_processors;
@@ -29,6 +29,6 @@ struct hvl_config_t
     // Array of exit handlers which can be overriden to allow for custom functionality,
     // the base exit handlers do the bare minimum to allow for stable execution
     exit_handler_t exit_handlers[VMX_EXIT_REASON_MAX];
-};
+} hvl_config_t;
 
 #endif
