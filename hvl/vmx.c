@@ -1,5 +1,6 @@
 #include "include/vmx.h"
 #include "include/cpu.h"
+#include "include/vcpu.h"
 
 typedef union 
 {
@@ -32,7 +33,7 @@ typedef union
     };
 } vmx_basic_msr_t;
 
-static inline uint64_t cap_get_fixed_bits_mask(uint64_t value);
+static inline uint64_t cap_get_fixed_bits_mask(const uint64_t value);
 
 // Lookup table for the `field` ID in the encoded value
 static const uint64_t s_vmx_control_field_lookup[5] = {
@@ -43,6 +44,7 @@ static const uint64_t s_vmx_control_field_lookup[5] = {
     CONTROL_SECONDARY_PROCBASED_CONTROLS
 };
 
+// Enable/disable a VM-execution control in a VMX state using an encoded VM control
 void vmx_toggle_control(vmx_state_t* state, vmx_control_t control)
 {
     const uint8_t control_field = (uint8_t)control & 0b111;
@@ -61,6 +63,7 @@ void vmx_toggle_control(vmx_state_t* state, vmx_control_t control)
     *target_controls |= !(*target_controls & control_bit);
 }
 
+// Fill out a VMX state with default controls and values
 void vmx_setup_default_state(vmx_state_t* state)
 {
     const vmx_basic_msr_t vmx_cap = {asm_rdmsr(IA32_VMX_BASIC)};
@@ -107,6 +110,12 @@ void vmx_setup_default_state(vmx_state_t* state)
         .cap.true_procbased_ctls = true_primary_procbased_ctls.value,
         .cap.true_procbased_ctls2 = true_secondary_procbased_ctls.value
     };
+}
+
+// Update the actual VMX state in the VMCS using a `vmx_state_t*`
+void vmx_commit_state(vmx_state_t* state)
+{
+     
 }
 
 // Gets the flexible bits mask from a capability MSR
