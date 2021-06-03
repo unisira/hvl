@@ -10,7 +10,7 @@ typedef struct
 
 static inline void hvl_initialise_mutex(hvl_mutex_t* mutex)
 {
-    ExInitializeFastMutex(mutex->_inner_mutex);
+    ExInitializeFastMutex(&mutex->_inner_mutex);
 }
 
 static inline void hvl_acquire_mutex(hvl_mutex_t* mutex)
