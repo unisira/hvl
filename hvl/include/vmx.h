@@ -29,11 +29,11 @@ typedef void(*exit_handler_t)(struct vcpu_t*);
 
 typedef struct
 {
-    uint64_t pinbased_ctls;
-    uint64_t exit_ctls;
-    uint64_t entry_ctls;
-    uint64_t primary_procbased_ctls; 
-    uint64_t secondary_procbased_ctls;
+    uint32_t pinbased_ctls;
+    uint32_t exit_ctls;
+    uint32_t entry_ctls;
+    uint32_t primary_procbased_ctls; 
+    uint32_t secondary_procbased_ctls;
     
     // States of required control fields 
     struct

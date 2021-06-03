@@ -89,21 +89,13 @@ void vmx_setup_default_state(vmx_state_t* state)
         asm_rdmsr(IA32_VMX_PROCBASED_CTLS2)
     };
 
-    const uint64_t default_pinbased_ctls = true_pinbased_ctls.on_bits & true_pinbased_ctls.off_bits;
-    const uint64_t default_exit_ctls = true_exit_ctls.on_bits & true_exit_ctls.off_bits;
-    const uint64_t default_entry_ctls = true_entry_ctls.on_bits & true_entry_ctls.off_bits;
-    const uint64_t default_primary_procbased_ctls = 
-        true_primary_procbased_ctls.on_bits & true_primary_procbased_ctls.off_bits;
-    const uint64_t default_secondary_procbased_ctls = 
-        true_secondary_procbased_ctls.on_bits & true_secondary_procbased_ctls.off_bits;
-
     // Update the state with the new bitmasks
     *state = (vmx_state_t){
-        .pinbased_ctls = default_pinbased_ctls,
-        .exit_ctls = default_exit_ctls,
-        .entry_ctls = default_entry_ctls,
-        .primary_procbased_ctls = default_primary_procbased_ctls,
-        .secondary_procbased_ctls = default_secondary_procbased_ctls,
+        .pinbased_ctls = true_pinbased_ctls.on_bits,
+        .exit_ctls = true_exit_ctls.on_bits,
+        .entry_ctls = true_entry_ctls.on_bits,
+        .primary_procbased_ctls = true_primary_procbased_ctls.on_bits,
+        .secondary_procbased_ctls = true_secondary_procbased_ctls.on_bits,
         .cap.true_pinbased_ctls = true_pinbased_ctls.value,
         .cap.true_exit_ctls = true_exit_ctls.value,
         .cap.true_entry_ctls = true_entry_ctls.value,
@@ -115,7 +107,7 @@ void vmx_setup_default_state(vmx_state_t* state)
 // Update the actual VMX state in the VMCS using a `vmx_state_t*`
 void vmx_commit_state(vmx_state_t* state)
 {
-     
+    vmx_vmwrite() 
 }
 
 // Gets the flexible bits mask from a capability MSR
