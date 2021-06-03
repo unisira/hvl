@@ -32,7 +32,7 @@ typedef union
     };
 } vmx_basic_msr_t;
 
-static inline uint64_t cap_get_flexible_bits_mask(uint64_t value);
+static inline uint64_t cap_get_fixed_bits_mask(uint64_t value);
 
 // Lookup table for the `field` ID in the encoded value
 static const uint64_t s_vmx_control_field_lookup[5] = {
@@ -54,7 +54,7 @@ void vmx_toggle_control(vmx_state_t* state, vmx_control_t control)
     const uint8_t control_bit = (uint8_t)((control & 0b111111000) >> 3);
 
     // Check if the target control is allowed to be modified
-    if (cap_get_flexible_bits_mask(target_capability) & control_bit)
+    if (cap_get_fixed_bits_mask(target_capability) & control_bit)
         return;
 
     // Flip the specified control bit
@@ -110,7 +110,7 @@ void vmx_setup_default_state(vmx_state_t* state)
 }
 
 // Gets the flexible bits mask from a capability MSR
-static inline uint64_t cap_get_flexible_bits_mask(const uint64_t value)
+static inline uint64_t cap_get_fixed_bits_mask(const uint64_t value)
 {
     const vmx_capability_msr_t cap = {value}; 
 
