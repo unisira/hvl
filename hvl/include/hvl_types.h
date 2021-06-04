@@ -23,6 +23,10 @@ typedef uint32_t hvl_handle_t;
 #define NULL (void*)0
 #endif
 
+#ifndef PAGE_SIZE
+#define PAGE_SIZE 4096
+#endif
+
 #define HVL_OK 0x00000000
 #define HVL_INVALID_PARAMETER 0x00000001
 #define HVL_NO_RESOURCES 0x00000002
