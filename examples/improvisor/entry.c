@@ -1,8 +1,25 @@
 #include <wdm.h>
 #include <hvl.h>
 
-NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath)
+
+VOID
+DriverUnload(
+    IN PDRIVER_OBJECT DriverObject
+)
 {
+    return;
+}
+
+NTSTATUS 
+DriverEntry(
+    IN PDRIVER_OBJECT DriverObject, 
+    IN PUNICODE_STRING RegistryPath
+)
+{
+    UNREFERENCED_PARAMETER(RegistryPath);
+
+    DriverObject->DriverUnload = DriverUnload;
+
     if (HVL_FAILURE(hvl_init()))
 	    return STATUS_NOT_SUPPORTED;
 
