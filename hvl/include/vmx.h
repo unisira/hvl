@@ -46,6 +46,29 @@ typedef struct
     } cap;
 } vmx_state_t;
 
+typedef struct
+{
+    uint32_t vmcs_revision_id;
+    uint32_t vmx_abort_indicator;
+    uint8_t data[0x1000 - sizeof(uint64_t)];
+} vmx_region_t;
+
+typedef union
+{
+    uint32_t value;
+
+    struct
+    {
+        uint16_t basic_exit_reason;
+        uint32_t reserved : 11;
+        uint32_t enclave_mode : 1;
+        uint32_t pending_mtf : 1;
+        uint32_t vmx_root_operation : 1;
+        uint32_t reserved_2 : 1;
+        uint32_t vm_entry_failure;
+    };
+} vmx_exit_reason_t;
+
 typedef enum 
 {
     VMX_EXIT_REASON_EXCEPTION_NMI = 0,
@@ -58,7 +81,7 @@ typedef enum
     VMX_EXIT_REASON_INTERRUPT_WINDOW = 7,
     VMX_EXIT_REASON_NMI_WINDOW = 8, 
     VMX_EXIT_REASON_MAX
-} vmx_exit_reason_t;
+} vmx_basic_exit_reason_t;
 
 typedef enum
 {
