@@ -69,6 +69,26 @@ typedef union
     };
 } vmx_exit_reason_t;
 
+typedef union
+{
+    uint64_t value;
+
+    struct 
+    {
+        uint64_t vmcs_revision_id : 31;
+        uint64_t reserved1 : 1;
+        uint64_t vmx_region_size : 13;
+        uint64_t reserved2 : 3;
+        uint64_t vmxon_phys_addr_width : 1;
+        uint64_t dual_monitor_smi : 1;
+        uint64_t memory_type : 4;
+        uint64_t io_instruction_reporting : 1;
+        uint64_t true_controls : 1;
+        uint64_t no_error_code_requirement : 1;
+        uint64_t reserved3 : 7;
+    };
+} vmx_basic_msr_t;
+
 typedef enum 
 {
     VMX_EXIT_REASON_EXCEPTION_NMI = 0,
@@ -99,6 +119,27 @@ typedef enum
     VMX_CTL_VIRTUAL_NMIS                = ENCODE_VMX_CONTROL(VMX_PINBASED_CTLS, 5),
     VMX_CTL_VMX_PREEMPTION_TIMER        = ENCODE_VMX_CONTROL(VMX_PINBASED_CTLS, 6),
     VMX_CTL_PROCESS_POSTED_INTERRUPTS   = ENCODE_VMX_CONTROL(VMX_PINBASED_CTLS, 7),
+    VMX_CTL_INTERRUPT_WINDOW_EXITING    = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 2),
+    VMX_CTL_USE_TSC_OFFSETTING          = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 3),
+    VMX_CTL_HLT_EXITING                 = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 7),
+    VMX_CTL_INVLPG_EXITING              = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 9),
+    VMX_CTL_MWAIT_EXITING               = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 10),
+    VMX_CTL_RDPMC_EXITING               = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 11),
+    VMX_CTL_RDTSC_EXITING               = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 12),
+    VMX_CTL_CR3_LOAD_EXITING            = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 15),
+    VMX_CTL_CR3_STORE_EXITING           = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 16),
+    VMX_CTL_CR8_LOAD_EXITING            = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 19),
+    VMX_CTL_CR8_STORE_EXITING           = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 20),
+    VMX_CTL_USE_TPR_SHADOW              = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 21),
+    VMX_CTL_NMI_WINDOW_EXITING          = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 22),
+    VMX_CTL_MOV_DR_EXITING              = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 23),
+    VMX_CTL_UNCOND_IO_EXITING           = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 24),
+    VMX_CTL_USE_IO_BITMAPS              = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 25),
+    VMX_CTL_MONITOR_TRAP_FLAG           = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 27),
+    VMX_CTL_USE_MSR_BITMAPS             = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 28),
+    VMX_CTL_MONITOR_EXITING             = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 29),
+    VMX_CTL_PAUSE_EXITING               = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 30),
+    VMX_CTL_SECONDARY_CTLS_ACTIVE       = ENCODE_VMX_CONTROL(VMX_PRIM_PROCBASED_CTLS, 31)
 } vmx_control_t;
 
 typedef enum
@@ -114,6 +155,6 @@ typedef enum
 
 void vmx_toggle_control(vmx_state_t*, vmx_control_t);
 void vmx_setup_default_state(vmx_state_t*);
-void vmx_commit_state(vmx_state_t*);
+void vmx_commit_state(const vmx_state_t*);
 
 #endif

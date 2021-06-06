@@ -13,27 +13,11 @@ typedef union
     };
 } vmx_capability_msr_t;
 
-typedef union
-{
-    uint64_t value;
-
-    struct 
-    {
-        uint64_t vmcs_revision_id : 31;
-        uint64_t reserved1 : 1;
-        uint64_t vmx_region_size : 13;
-        uint64_t reserved2 : 3;
-        uint64_t vmxon_phys_addr_width : 1;
-        uint64_t dual_monitor_smi : 1;
-        uint64_t memory_type : 4;
-        uint64_t io_instruction_reporting : 1;
-        uint64_t true_controls : 1;
-        uint64_t no_error_code_requirement : 1;
-        uint64_t reserved3 : 7;
-    };
-} vmx_basic_msr_t;
-
 static inline uint64_t cap_get_fixed_bits_mask(const uint64_t value);
+
+// Defined in vmx.asm
+static uint64_t asm_vmwrite(uint64_t encoding, uint64_t value);
+static uint64_t asm_vmread(uint64_t encoding, uint64_t* value);
 
 // Lookup table for the `field` ID in the encoded value
 static const uint64_t s_vmx_control_field_lookup[5] = {
@@ -104,10 +88,28 @@ void vmx_setup_default_state(vmx_state_t* state)
     };
 }
 
-// Update the actual VMX state in the VMCS using a `vmx_state_t*`
-void vmx_commit_state(vmx_state_t* state)
+void vmx_vmwrite(vmcs_t component, uint64_t value)
 {
-    vmx_vmwrite() 
+    // TODO: Check flags
+    asm_vmwrite((uint64_t)component, value);
+}
+
+uint64_t vmx_vmread(vmcs_t component)
+{
+    uint64_t result = 0;
+    asm_vmread((uint64_t)component, &result);
+    return result;
+}
+
+// Update the actual VMX state in the VMCS using a `vmx_state_t*`
+void vmx_commit_state(const vmx_state_t* state)
+{
+    // NOTE: We should check if we are actually in VMX operation
+    vmx_vmwrite(CONTROL_PINBASED_CONTROLS, state->pinbased_ctls); 
+    vmx_vmwrite(CONTROL_PRIMARY_PROCBASED_CONTROLS, state->primary_procbased_ctls); 
+    vmx_vmwrite(CONTROL_SECONDARY_PROCBASED_CONTROLS, state->secondary_procbased_ctls); 
+    vmx_vmwrite(CONTROL_VMEXIT_CONTROLS, state->exit_ctls); 
+    vmx_vmwrite(CONTROL_VMENTRY_CONTROLS, state->entry_ctls); 
 }
 
 // Gets the flexible bits mask from a capability MSR
